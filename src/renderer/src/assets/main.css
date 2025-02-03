@@ -45,47 +45,50 @@ h1 {
   margin-bottom: 2rem;
 }
 
+.input-fields {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .input-group {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   position: relative;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--text-color);
+.input-group label {
   font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-select, input {
-  width: 100%;
+.input-group input {
   padding: 0.875rem 1rem;
   border: 2px solid var(--border-color);
   border-radius: 0.5rem;
-  margin-bottom: 0.25rem;
   font-size: 1rem;
   transition: all 0.2s ease;
   background-color: white;
 }
 
-select:hover, input:hover {
-  border-color: #cbd5e1;
+.input-group input:hover {
+  border-color: var(--primary-color);
 }
 
-select:focus, input:focus {
+.input-group input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .input-group small {
-  display: block;
   color: #64748b;
   font-size: 0.875rem;
-  margin-top: 0.25rem;
 }
 
 /* Remove spinner buttons from number inputs */
@@ -99,12 +102,8 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-.input-fields {
-  margin-top: 1.5rem;
-}
-
 .calculate-btn {
-  width: 100%;
+  margin-top: 1rem;
   padding: 1rem;
   background-color: var(--primary-color);
   color: white;
@@ -113,9 +112,8 @@ input[type="number"] {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  letter-spacing: 0.025em;
   transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
 }
 
 .calculate-btn:hover {
@@ -129,14 +127,25 @@ input[type="number"] {
   box-shadow: none;
 }
 
+.calculate-btn.disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.calculate-btn.disabled:hover {
+  background-color: #94a3b8;
+  transform: none;
+  box-shadow: none;
+}
+
 .result {
   margin-top: 2rem;
-  text-align: center;
   padding: 1.5rem;
-  background-color: var(--background-color);
+  border: 2px solid var(--border-color);
   border-radius: 0.5rem;
-  border: 2px solid #e2e8f0;
-  transition: all 0.3s ease;
+  background-color: white;
 }
 
 .result h2 {
@@ -150,6 +159,7 @@ input[type="number"] {
 .custom-select {
   position: relative;
   width: 100%;
+  margin-top: 0.5rem;
 }
 
 .select-selected {
@@ -159,8 +169,10 @@ input[type="number"] {
   background-color: white;
   cursor: pointer;
   user-select: none;
-  font-size: 1rem;
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 3rem;
   transition: all 0.2s ease;
 }
 
@@ -170,42 +182,8 @@ input[type="number"] {
 
 .select-selected.open {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   border-radius: 0.5rem 0.5rem 0 0;
-}
-
-.select-selected:not(.has-value) {
-  color: #94a3b8;
-}
-
-.select-arrow {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0.8rem;
-  height: 0.8rem;
-  transition: transform 0.2s ease;
-}
-
-.select-arrow::before {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid var(--text-color);
-  border-bottom: 2px solid var(--text-color);
-  transform: rotate(45deg);
-  transition: border-color 0.2s ease;
-}
-
-.select-selected.open .select-arrow::before {
-  transform: rotate(-135deg);
-  top: 25%;
-}
-
-.select-selected:hover .select-arrow::before {
-  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .select-options {
@@ -220,19 +198,22 @@ input[type="number"] {
   max-height: 300px;
   overflow-y: auto;
   z-index: 100;
-  animation: dropdownFadeIn 0.2s ease;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  animation: dropdownFadeIn 0.2s ease;
 }
 
 .select-option {
   padding: 0.875rem 1rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   transition: all 0.2s ease;
+  min-height: 1.5rem;
 }
 
 .select-option:hover {
   background-color: var(--background-color);
-  color: var(--primary-color);
 }
 
 .select-option.selected {
@@ -240,6 +221,22 @@ input[type="number"] {
   color: white;
 }
 
+.select-option.selected:hover {
+  background-color: var(--secondary-color);
+}
+
+.select-value {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-color);
+}
+
+.select-selected:not(.has-value) .select-value {
+  color: #94a3b8;
+}
+
+/* Dropdown Animation */
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;
@@ -251,7 +248,7 @@ input[type="number"] {
   }
 }
 
-/* Scrollbar styling for the dropdown */
+/* Scrollbar Styling */
 .select-options::-webkit-scrollbar {
   width: 8px;
 }
@@ -269,3 +266,58 @@ input[type="number"] {
 .select-options::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Responsive Spacing */
+@media (max-width: 640px) {
+  .input-fields {
+    gap: 1.25rem;
+  }
+  
+  .input-group {
+    gap: 0.375rem;
+  }
+  
+  .select-selected,
+  .select-option,
+  .input-group input {
+    padding: 0.75rem 0.875rem;
+  }
+}
+
+/* Consistent Icon Alignment */
+.select-value,
+.select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 1.5rem;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Focus and Active States */
+.select-selected:focus-within,
+.input-group input:focus-within {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Hover States */
+.select-option:hover {
+  background-color: var(--background-color);
+}
+
+.select-option.selected:hover {
+  background-color: var(--secondary-color);
+}
+/* 
+input:invalid {
+  border-color: #ef4444;
+} */

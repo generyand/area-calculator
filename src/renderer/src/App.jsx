@@ -1,6 +1,49 @@
 import React, { useState, useRef, useEffect } from 'react'
 import './assets/main.css'
 
+const ShapeIcon = ({ shape }) => {
+  switch (shape) {
+    case 'square':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+        </svg>
+      )
+    case 'rectangle':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+        </svg>
+      )
+    case 'circle':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+      )
+    case 'triangle':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 20h18L12 4z" />
+        </svg>
+      )
+    case 'trapezoid':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M4 18L8 6h8l4 12H4z" />
+        </svg>
+      )
+    case 'ellipse':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <ellipse cx="12" cy="12" rx="10" ry="6" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
+
 const CustomSelect = ({ value, onChange, options }) => {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -22,7 +65,14 @@ const CustomSelect = ({ value, onChange, options }) => {
         className={`select-selected ${isOpen ? 'open' : ''} ${value ? 'has-value' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {value ? options.find(opt => opt.value === value)?.label : 'Choose a shape'}
+        {value ? (
+          <div className="select-value">
+            <ShapeIcon shape={value} />
+            <span>{options.find(opt => opt.value === value)?.label}</span>
+          </div>
+        ) : (
+          'Choose a shape'
+        )}
         <span className="select-arrow"></span>
       </div>
       {isOpen && (
@@ -36,7 +86,8 @@ const CustomSelect = ({ value, onChange, options }) => {
                 setIsOpen(false)
               }}
             >
-              {option.label}
+              <ShapeIcon shape={option.value} />
+              <span>{option.label}</span>
             </div>
           ))}
         </div>
@@ -66,6 +117,26 @@ const App = () => {
     ellipse: { label: 'Ellipse', fields: ['radius1', 'radius2'] }
   }
 
+  const isFormValid = () => {
+    if (!selectedShape) return false
+    
+    const requiredFields = shapes[selectedShape].fields
+    return requiredFields.every(field => {
+      const value = dimensions[field]
+      return value !== undefined && 
+             value !== '' && 
+             !isNaN(value) && 
+             Number(value) > 0
+    })
+  }
+
+  const handleInputChange = (field, value) => {
+    // Only allow numbers and decimal point
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      setDimensions(prev => ({ ...prev, [field]: value }))
+    }
+  }
+
   const calculateArea = () => {
     switch (selectedShape) {
       case 'square':
@@ -91,10 +162,6 @@ const App = () => {
     }
   }
 
-  const handleInputChange = (field, value) => {
-    setDimensions(prev => ({ ...prev, [field]: value }))
-  }
-
   const shapeOptions = Object.entries(shapes).map(([key, { label }]) => ({
     value: key,
     label: label
@@ -102,7 +169,7 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1>Shape Area Calculator</h1>
+      {/* <h1>Shape Area Calculator</h1> */}
       
       <div className="shape-selector">
         <label>Select Shape:</label>
@@ -129,14 +196,15 @@ const App = () => {
                 placeholder={`Enter ${field} measurement`}
                 min="0"
                 step="any"
+                required
               />
               <small>Enter the {field} in your preferred units</small>
             </div>
           ))}
           <button 
             onClick={calculateArea} 
-            className="calculate-btn"
-            disabled={!Object.values(dimensions).every(val => val > 0)}
+            className={`calculate-btn ${!isFormValid() ? 'disabled' : ''}`}
+            disabled={!isFormValid()}
           >
             Calculate Area
           </button>
