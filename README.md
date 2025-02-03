@@ -24,7 +24,7 @@ Area Calculator provides instant area calculations for:
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/area-calculator.git
+git clone https://github.com/generyand/area-calculator.git
 cd area-calculator
 ```
 
